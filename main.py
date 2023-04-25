@@ -2,25 +2,31 @@ import pygame as pg
 import sys
 from settings import *
 from map import *
+from player import *
 
 class Game:
     def __init__(self):  # Game constructor
         pg.init()  # initialize pygame
         self.screen = pg.display.set_mode(RES)
         self.clock = pg.time.Clock()
+        self.delta_time = 1  # Delta Time: the amount of time that has passed since the last frame
         self.new_game()
 
+    # on the start of a new game initialize map and player
     def new_game(self):
         self.map = Map(self)
+        self.player = Player(self)
 
     def update(self):  # update our screen and display current FPS
+        self.player.update()
         pg.display.flip()
-        self.clock.tick(FPS)
+        self.delta_time = self.clock.tick(FPS)
         pg.display.set_caption(f'{self.clock.get_fps()}')  # current FPS
 
     def draw(self):  # at each iteration, paint the screen black
         self.screen.fill('black')
         self.map.draw()  # draw map
+        self.player.draw()
 
     def check_events(self):
         for event in pg.event.get():
